@@ -22,6 +22,9 @@ export class LandingComponent implements OnInit, OnDestroy {
   raffleState: RaffleState = 'idle';
   winner: Participant | null = null;
 
+  titlePrefix: string = '';
+  titleSuffix: string = '';
+
   backgroundNames: BackgroundNameDisplay[] = [];
   private nameDisplayInterval: any; // For 'idle' state interval
   private raffleRunTimeout: any; // For selecting winner
@@ -89,6 +92,20 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.raffleService.winner$.subscribe(winner => {
         this.winner = winner;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.raffleService.landingPageTitlePrefix$.subscribe(prefix => {
+        this.titlePrefix = prefix;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.raffleService.landingPageTitleSuffix$.subscribe(suffix => {
+        this.titleSuffix = suffix;
         this.cdr.detectChanges();
       })
     );

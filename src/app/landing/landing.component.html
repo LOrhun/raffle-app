@@ -1,9 +1,11 @@
 <div class="landing-container">
   <div class="landing-title-text"
        [class.hidden]="raffleState === 'running' || raffleState === 'winner_revealed'">
+    <div *ngIf="titlePrefix" class="title-prefix">{{ titlePrefix }}</div>
     Sakarya Üniversitesi <br>
     Bilgisayar ve Bilişim Bilimleri Fakültesi <br>
     Mezunlar Günü
+    <div *ngIf="titleSuffix" class="title-suffix">{{ titleSuffix }}</div>
   </div>
 
   <div *ngIf="winner" class="winner-text">

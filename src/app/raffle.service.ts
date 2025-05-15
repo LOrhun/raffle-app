@@ -19,6 +19,8 @@ export type RaffleState = 'idle' | 'running' | 'winner_revealed';
 const LS_PARTICIPANTS_KEY = 'raffle_participants';
 const LS_RAFFLE_STATE_KEY = 'raffle_state';
 const LS_WINNER_KEY = 'raffle_winner';
+const LS_LANDING_TITLE_PREFIX_KEY = 'raffle_landing_title_prefix';
+const LS_LANDING_TITLE_SUFFIX_KEY = 'raffle_landing_title_suffix';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +34,12 @@ export class RaffleService implements OnDestroy {
 
   private winnerSubject: BehaviorSubject<Participant | null>;
   winner$: Observable<Participant | null>;
+
+  private landingPageTitlePrefixSubject: BehaviorSubject<string>;
+  landingPageTitlePrefix$: Observable<string>;
+
+  private landingPageTitleSuffixSubject: BehaviorSubject<string>;
+  landingPageTitleSuffix$: Observable<string>;
 
   private isBrowser: boolean;
 
@@ -47,6 +55,12 @@ export class RaffleService implements OnDestroy {
 
     this.winnerSubject = new BehaviorSubject<Participant | null>(this.loadFromLocalStorage(LS_WINNER_KEY, null));
     this.winner$ = this.winnerSubject.asObservable();
+
+    this.landingPageTitlePrefixSubject = new BehaviorSubject<string>(this.loadFromLocalStorage(LS_LANDING_TITLE_PREFIX_KEY, ''));
+    this.landingPageTitlePrefix$ = this.landingPageTitlePrefixSubject.asObservable();
+
+    this.landingPageTitleSuffixSubject = new BehaviorSubject<string>(this.loadFromLocalStorage(LS_LANDING_TITLE_SUFFIX_KEY, ''));
+    this.landingPageTitleSuffix$ = this.landingPageTitleSuffixSubject.asObservable();
 
     // Listen to storage events from other tabs
     if (this.isBrowser) {
@@ -85,6 +99,16 @@ export class RaffleService implements OnDestroy {
         const newWinner = event.newValue ? JSON.parse(event.newValue) : null;
         if (JSON.stringify(this.winnerSubject.value) !== JSON.stringify(newWinner)) {
           this.winnerSubject.next(newWinner);
+        }
+      } else if (event.key === LS_LANDING_TITLE_PREFIX_KEY && event.newValue !== null) {
+        const newPrefix = JSON.parse(event.newValue);
+        if (this.landingPageTitlePrefixSubject.value !== newPrefix) {
+          this.landingPageTitlePrefixSubject.next(newPrefix);
+        }
+      } else if (event.key === LS_LANDING_TITLE_SUFFIX_KEY && event.newValue !== null) {
+        const newSuffix = JSON.parse(event.newValue);
+        if (this.landingPageTitleSuffixSubject.value !== newSuffix) {
+          this.landingPageTitleSuffixSubject.next(newSuffix);
         }
       }
     });
@@ -141,6 +165,16 @@ export class RaffleService implements OnDestroy {
     this.winnerSubject.next(null);
     this.saveToLocalStorage(LS_WINNER_KEY, null);
     this.setRaffleState('idle'); // This will also save state to LS
+  }
+
+  setLandingPageTitlePrefix(prefix: string): void {
+    this.landingPageTitlePrefixSubject.next(prefix);
+    this.saveToLocalStorage(LS_LANDING_TITLE_PREFIX_KEY, prefix);
+  }
+
+  setLandingPageTitleSuffix(suffix: string): void {
+    this.landingPageTitleSuffixSubject.next(suffix);
+    this.saveToLocalStorage(LS_LANDING_TITLE_SUFFIX_KEY, suffix);
   }
 
   ngOnDestroy(): void {

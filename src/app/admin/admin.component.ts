@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RaffleService, Participant } from '../raffle.service';
 import * as Papa from 'papaparse';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -8,8 +9,35 @@ import * as Papa from 'papaparse';
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit, OnDestroy {
+  titlePrefix: string = '';
+  titleSuffix: string = '';
+  private subscriptions: Subscription = new Subscription();
+
   constructor(private raffleService: RaffleService) { }
+
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.raffleService.landingPageTitlePrefix$.subscribe(prefix => {
+        this.titlePrefix = prefix;
+      })
+    );
+    this.subscriptions.add(
+      this.raffleService.landingPageTitleSuffix$.subscribe(suffix => {
+        this.titleSuffix = suffix;
+      })
+    );
+  }
+
+  saveTitlePrefix(): void {
+    this.raffleService.setLandingPageTitlePrefix(this.titlePrefix);
+    alert('Title prefix saved!');
+  }
+
+  saveTitleSuffix(): void {
+    this.raffleService.setLandingPageTitleSuffix(this.titleSuffix);
+    alert('Title suffix saved!');
+  }
 
   onFileSelect(event: Event): void {
     const element = event.currentTarget as HTMLInputElement;
@@ -79,5 +107,9 @@ export class AdminComponent {
 
   resetRaffleStateOnly(): void {
     this.raffleService.resetRaffleStateAndWinner();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

@@ -42,6 +42,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private isVideoPlaying = false;
   private isBrowser: boolean;
   private fadeTimeout: any;
+  private firstInteractionOccurred = false;
+  private boundAttemptPlayAfterInteraction: () => void;
 
   constructor(
     private router: Router,
@@ -49,10 +51,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+    this.boundAttemptPlayAfterInteraction = this.attemptPlayAfterInteraction.bind(this);
   }
 
   ngOnInit(): void {
     if (!this.isBrowser) return; // No router events or video logic on server
+
+    document.addEventListener('click', this.boundAttemptPlayAfterInteraction, { once: true });
+    document.addEventListener('keydown', this.boundAttemptPlayAfterInteraction, { once: true });
 
     this.routerSubscription = this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -205,16 +211,43 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.videoEventSubscriptions = [];
   }
 
+  private attemptPlayAfterInteraction(): void {
+    if (!this.isBrowser || this.firstInteractionOccurred) return;
+    this.firstInteractionOccurred = true; // Ensure this logic runs only once per interaction type if needed, though {once: true} handles it.
+    // console.log("First user interaction detected.");
+
+    if (this.videoElement && this.showVideoBackground && !this.isVideoPlaying && this.videoElement.paused) {
+        // console.log("Attempting to play video after first interaction.");
+        this.videoElement.play().then(() => {
+            // console.log("Video playback started successfully after user interaction.");
+            this.isVideoPlaying = true;
+            // If we have fade logic, ensure it kicks in (e.g., fade from black if it was stuck on black)
+            if (this.videoOverlayElement && parseFloat(this.videoOverlayElement.style.opacity || '0') === 1) {
+                this.fadeTimeout = setTimeout(() => this.setOverlayOpacity(0), 50);
+            }
+        }).catch(error => {
+            console.error("Error attempting to play video after user interaction:", error);
+        });
+    }
+    // Clean up these specific listeners after first interaction from either type
+    document.removeEventListener('click', this.boundAttemptPlayAfterInteraction);
+    document.removeEventListener('keydown', this.boundAttemptPlayAfterInteraction);
+  }
+
   ngOnDestroy(): void {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
     this.clearVideoEventListeners();
-    if (this.isBrowser && this.videoElement) {
-        try {
-            this.videoElement.pause();
-        } catch (e) {
-            console.warn("Error pausing video on destroy:", e);
+    if (this.isBrowser) {
+        document.removeEventListener('click', this.boundAttemptPlayAfterInteraction);
+        document.removeEventListener('keydown', this.boundAttemptPlayAfterInteraction);
+        if (this.videoElement) {
+            try {
+                this.videoElement.pause();
+            } catch (e) {
+                console.warn("Error pausing video on destroy:", e);
+            }
         }
     }
   }
