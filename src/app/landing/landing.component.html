@@ -1,4 +1,4 @@
-<div class="landing-container">
+<div class="landing-container" [class.breathing-background]="raffleState === 'idle' || raffleState === 'winner_revealed'">
   <div class="landing-title-text"
        [class.hidden]="raffleState === 'running' || raffleState === 'winner_revealed'">
     <div *ngIf="titlePrefix" class="title-prefix">{{ titlePrefix }}</div>
@@ -15,13 +15,67 @@
     </div>
   </div>
 
-  <!-- Background names will be dynamically added here by the component -->
-  <div class="background-name"
-       *ngFor="let bgName of backgroundNames; trackBy: trackById"
-       [style.left]="bgName.x + '%'"
-       [style.top]="bgName.y + '%'"
-       [style.opacity]="bgName.opacity"
-       >
-    {{ bgName.text }}
+  <!-- Background Names -->
+  <div *ngFor="let name of backgroundNames; trackBy: trackById"
+       class="background-name"
+       [ngClass]="{
+         'win95-style': currentNameStyle === 'win95',
+         'code-editor-style': currentNameStyle === 'codeEditor',
+         'blueprint-style': currentNameStyle === 'blueprint',
+         'circuit-board-style': currentNameStyle === 'circuitBoard',
+         'version-control-style': currentNameStyle === 'versionControl'
+       }"
+       [style.left.%]="name.x"
+       [style.top.%]="name.y"
+       [style.opacity]="name.opacity">
+
+    <!-- Default/Normal Style Structure -->
+    <ng-container *ngIf="currentNameStyle === 'normal' || !currentNameStyle"> <!-- Default or if normal explicitly -->
+      {{ name.text }}
+    </ng-container>
+
+    <!-- Windows 95 Style Structure -->
+    <ng-container *ngIf="currentNameStyle === 'win95'">
+      <div class="win95-name-window">
+        <div class="win95-title-bar">
+          <span class="win95-title">Katılımcı</span>
+          <div class="win95-buttons">
+            <span class="win95-button">_</span>
+            <span class="win95-button">[]</span>
+            <span class="win95-button win95-close">X</span>
+          </div>
+        </div>
+        <div class="win95-body">
+          {{ name.text }}
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Code Editor Style Structure -->
+    <ng-container *ngIf="currentNameStyle === 'codeEditor'">
+      <!-- Example: Split name for styling parts. More complex logic might be needed. -->
+      <span class="code-keyword">const</span>&nbsp;<span class="code-variable">participant</span> = <span class="code-string">"{{ name.text }}"</span>;
+    </ng-container>
+
+    <!-- Blueprint Style Structure -->
+    <ng-container *ngIf="currentNameStyle === 'blueprint'">
+      <div class="blueprint-grid">
+        <span class="blueprint-text">{{ name.text }}</span>
+      </div>
+    </ng-container>
+
+    <!-- Circuit Board Style Structure -->
+    <ng-container *ngIf="currentNameStyle === 'circuitBoard'">
+      <div class="circuit-trace">
+        <span class="circuit-text">{{ name.text }}</span>
+      </div>
+    </ng-container>
+
+    <!-- Version Control Style Structure -->
+    <ng-container *ngIf="currentNameStyle === 'versionControl'">
+      <span class="vc-line"><span class="vc-prompt">$</span> git show HEAD --name-only</span>
+      <span class="vc-line vc-output">{{ name.text.replace(' ', '_') + '.conf' }}</span>
+    </ng-container>
+
   </div>
 </div>

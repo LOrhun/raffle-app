@@ -1,63 +1,139 @@
-<div>
+<div class="admin-page-content">
   <h2>Admin Paneli</h2>
 
-  <div class="admin-section card shadow-sm mb-4">
-    <div class="card-body">
-      <h3 class="card-title">Nasıl Kullanılır?</h3>
-      <p class="card-text">
-        Çekiliş uygulamasını yönetmek için bu paneli kullanın. Değişiklikler sekmeler arasında senkronize edilir.
-      </p>
-      <ul>
-        <li><strong>Katılımcıları Yükle:</strong> Bir CSV dosyası seçin. Beklenen sütunlar: <code>ID, Ad, Soyad, MezunYil, Mail, Telefon, Sirket, Pozisyon, KartID</code>. Bir katılımcının eklenebilmesi için yalnızca 'Ad' ve 'Soyad' kesinlikle gereklidir.</li>
-        <li><strong>Açılış Sayfası Başlığı:</strong> Açılış sayfasındaki ana başlığın öncesinde veya sonrasında görünecek metni özelleştirin. Değişiklikleri uygulamak için her alan için 'Kaydet'e tıklayın.</li>
-        <li><strong>Çekiliş Kontrolleri:</strong> Aşağıdaki butonları kullanarak çekiliş sürecini yönetin.</li>
-      </ul>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="admin-section card shadow-sm mb-4">
-    <div class="card-body">
-      <h3 class="card-title">Açılış Sayfası Başlığını Özelleştir</h3>
-      <p class="card-text text-muted small">Açılış sayfasındaki ana başlığın öncesinde ve/veya sonrasında görünecek özel metin ayarlayın. Bu değişiklikler kaydedildikten sonra açılış sayfasında hemen görünür olacaktır.</p>
-      <div class="mb-3">
-        <label for="titlePrefix" class="form-label">Ana Başlıktan Önceki Metin:</label>
-        <div class="input-group">
-          <input type="text" id="titlePrefix" class="form-control" [(ngModel)]="titlePrefix" placeholder="örn. Hoş Geldiniz">
-          <button (click)="saveTitlePrefix()" class="btn btn-outline-primary">Ön Eki Kaydet</button>
+  <div class="row">
+    <!-- Column 1 -->
+    <div class="col-md-6">
+      <div class="admin-section card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">Nasıl Kullanılır?</h3>
+          <p class="card-text">
+            Çekiliş uygulamasını yönetmek için bu paneli kullanın. Değişiklikler sekmeler arasında senkronize edilir.
+          </p>
+          <ul>
+            <li><strong>Katılımcıları Yükle:</strong> Bir CSV dosyası seçin. Beklenen sütunlar: <code>ID, Ad, Soyad, MezunYil, Mail, Telefon, Sirket, Pozisyon, KartID</code>. Bir katılımcının eklenebilmesi için yalnızca 'Ad' ve 'Soyad' kesinlikle gereklidir.</li>
+            <li><strong>Açılış Sayfası Başlığı:</strong> Açılış sayfasındaki ana başlığın öncesinde veya sonrasında görünecek metni özelleştirin. Değişiklikleri uygulamak için her alan için 'Kaydet'e tıklayın.</li>
+            <li><strong>Çekiliş Kontrolleri:</strong> Aşağıdaki butonları kullanarak çekiliş sürecini yönetin.</li>
+          </ul>
         </div>
       </div>
-      <div>
-        <label for="titleSuffix" class="form-label">Ana Başlıktan Sonraki Metin:</label>
-        <div class="input-group">
-          <input type="text" id="titleSuffix" class="form-control" [(ngModel)]="titleSuffix" placeholder="örn. Yıllık Çekilişimize!">
-          <button (click)="saveTitleSuffix()" class="btn btn-outline-primary">Son Eki Kaydet</button>
+
+      <div class="admin-section card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">Açılış Sayfası Başlığını Özelleştir</h3>
+          <p class="card-text text-muted small">Açılış sayfasındaki ana başlığın öncesinde ve/veya sonrasında görünecek özel metin ayarlayın. Bu değişiklikler kaydedildikten sonra açılış sayfasında hemen görünür olacaktır.</p>
+          <div class="mb-3">
+            <label for="titlePrefix" class="form-label">Ana Başlıktan Önceki Metin:</label>
+            <div class="input-group">
+              <input type="text" id="titlePrefix" class="form-control" [(ngModel)]="titlePrefix" placeholder="örn. Hoş Geldiniz">
+              <button (click)="saveTitlePrefix()" class="btn btn-outline-primary">Ön Eki Kaydet</button>
+            </div>
+          </div>
+          <div>
+            <label for="titleSuffix" class="form-label">Ana Başlıktan Sonraki Metin:</label>
+            <div class="input-group">
+              <input type="text" id="titleSuffix" class="form-control" [(ngModel)]="titleSuffix" placeholder="örn. Yıllık Çekilişimize!">
+              <button (click)="saveTitleSuffix()" class="btn btn-outline-primary">Son Eki Kaydet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-section card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">Katılımcıları Yükle (CSV Dosyası)</h3>
+          <p class="card-text text-muted small">Katılımcı verilerini içeren bir CSV dosyası yükleyin. Dosyanın en az 'Ad' ve 'Soyad' sütunlarını içerdiğinden emin olun. Diğer tanınan sütunlar da içe aktarılacaktır.</p>
+          <input type="file" (change)="onFileSelect($event)" accept=".csv" class="form-control">
         </div>
       </div>
     </div>
-  </div>
 
-  <hr>
+    <!-- Column 2 -->
+    <div class="col-md-6">
+      <div class="admin-section card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">Görsel Ayarlar</h3>
+          <p class="card-text text-muted small mb-2">Açılış sayfasında görünecek arka plan isimlerinin stilini seçin:</p>
+          <div class="style-selection-container d-flex flex-wrap gap-2 mb-3">
+            <!-- Normal Style Button -->
+            <button type="button" class="btn btn-outline-secondary style-select-btn flex-grow-1" [class.active]="selectedNameStyle === 'normal'" (click)="selectNameStyle('normal')">
+              <div class="style-preview-button text-center">
+                <div class="style-label fw-bold mb-1">Normal Stil</div>
+                <div class="background-name-preview">Örnek İsim</div>
+              </div>
+            </button>
 
-  <div class="admin-section card shadow-sm mb-4">
-    <div class="card-body">
-      <h3 class="card-title">Katılımcıları Yükle (CSV Dosyası)</h3>
-      <p class="card-text text-muted small">Katılımcı verilerini içeren bir CSV dosyası yükleyin. Dosyanın en az 'Ad' ve 'Soyad' sütunlarını içerdiğinden emin olun. Diğer tanınan sütunlar da içe aktarılacaktır.</p>
-      <input type="file" (change)="onFileSelect($event)" accept=".csv" class="form-control">
-    </div>
-  </div>
+            <!-- Win95 Style Button -->
+            <button type="button" class="btn btn-outline-secondary style-select-btn flex-grow-1" [class.active]="selectedNameStyle === 'win95'" (click)="selectNameStyle('win95')">
+              <div class="style-preview-button text-center">
+                <div class="style-label fw-bold mb-1">Windows 95 Stili</div>
+                <div class="admin-preview-win95-window-small m-auto">
+                  <div class="admin-preview-win95-title-bar-small">
+                    <span class="admin-preview-win95-title-text-small">Katılımcı</span>
+                    <div class="admin-preview-win95-buttons-small">
+                      <span class="admin-preview-win95-btn-small">_</span>
+                      <span class="admin-preview-win95-btn-small">[]</span>
+                      <span class="admin-preview-win95-btn-small">X</span>
+                    </div>
+                  </div>
+                  <div class="admin-preview-win95-body-small">Örnek İsim</div>
+                </div>
+              </div>
+            </button>
 
-  <hr>
+            <!-- Code Editor Style Button -->
+            <button type="button" class="btn btn-outline-secondary style-select-btn flex-grow-1" [class.active]="selectedNameStyle === 'codeEditor'" (click)="selectNameStyle('codeEditor')">
+              <div class="style-preview-button text-center">
+                <div class="style-label fw-bold mb-1">Kod Editörü Stili</div>
+                <div class="admin-preview-code-editor-small m-auto">
+                  <span class="admin-preview-code-keyword">const</span> <span class="admin-preview-code-variable">name</span> = <span class="admin-preview-code-string">"Örnek"</span>;
+                </div>
+              </div>
+            </button>
 
-  <div class="admin-section card shadow-sm mb-4">
-    <div class="card-body">
-      <h3 class="card-title">Çekiliş Kontrolleri</h3>
-      <p class="card-text text-muted small">Çekiliş akışını kontrol etmek için bu butonları kullanın. Buradaki eylemler, tüm izleyiciler için açılış sayfası görüntüsünü etkileyecektir.</p>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        <button (click)="startRaffle()" title="Katılımcı adı animasyon döngüsünü başlatır." class="btn btn-success me-md-2">Çekiliş Animasyonunu Başlat</button>
-        <button (click)="resetRaffle()" title="Tüm katılımcıları, kazananı temizler ve çekiliş durumunu sıfırlar. Dikkatli kullanın!" class="btn btn-danger me-md-2">Tümünü Sıfırla (Katılımcıları ve Durumu Temizle)</button>
-        <button (click)="resetRaffleStateOnly()" title="Çekiliş durumunu sıfırlar ve kazananı temizler, ancak katılımcı listesini korur." class="btn btn-warning">Sadece Durumu Sıfırla (Katılımcıları Koru)</button>
+            <!-- Blueprint Style Button -->
+            <button type="button" class="btn btn-outline-secondary style-select-btn flex-grow-1" [class.active]="selectedNameStyle === 'blueprint'" (click)="selectNameStyle('blueprint')">
+              <div class="style-preview-button text-center">
+                <div class="style-label fw-bold mb-1">Blueprint Stili</div>
+                <div class="admin-preview-blueprint-small m-auto">
+                  <span>PROJE: ÖRNEK</span>
+                </div>
+              </div>
+            </button>
+
+            <!-- Circuit Board Style Button -->
+            <button type="button" class="btn btn-outline-secondary style-select-btn flex-grow-1" [class.active]="selectedNameStyle === 'circuitBoard'" (click)="selectNameStyle('circuitBoard')">
+              <div class="style-preview-button text-center">
+                <div class="style-label fw-bold mb-1">Devre Kartı Stili</div>
+                <div class="admin-preview-circuit-board-small m-auto">
+                  <span>Örnek Sinyal</span>
+                </div>
+              </div>
+            </button>
+
+            <!-- Version Control Style Button -->
+            <button type="button" class="btn btn-outline-secondary style-select-btn flex-grow-1" [class.active]="selectedNameStyle === 'versionControl'" (click)="selectNameStyle('versionControl')">
+              <div class="style-preview-button text-center">
+                <div class="style-label fw-bold mb-1">Versiyon Kontrol Stili</div>
+                <div class="admin-preview-version-control-small m-auto">
+                  <span class="admin-preview-vc-commit">commit:</span> <span class="admin-preview-vc-hash">a1b2c3d</span> <span class="admin-preview-vc-message">Örnek Değişiklik</span>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-section card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">Çekiliş Kontrolleri</h3>
+          <p class="card-text text-muted small">Çekiliş akışını kontrol etmek için bu butonları kullanın. Buradaki eylemler, tüm izleyiciler için açılış sayfası görüntüsünü etkileyecektir.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <button (click)="startRaffle()" title="Katılımcı adı animasyon döngüsünü başlatır." class="btn btn-success me-md-2">Çekiliş Animasyonunu Başlat</button>
+            <button (click)="resetRaffle()" title="Tüm katılımcıları, kazananı temizler ve çekiliş durumunu sıfırlar. Dikkatli kullanın!" class="btn btn-danger me-md-2">Tümünü Sıfırla (Katılımcıları ve Durumu Temizle)</button>
+            <button (click)="resetRaffleStateOnly()" title="Çekiliş durumunu sıfırlar ve kazananı temizler, ancak katılımcı listesini korur." class="btn btn-warning">Sadece Durumu Sıfırla (Katılımcıları Koru)</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

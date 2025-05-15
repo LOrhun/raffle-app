@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RaffleService, Participant } from '../raffle.service';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { RaffleService, Participant, NameStyle } from '../raffle.service';
 import * as Papa from 'papaparse';
 import { Subscription } from 'rxjs';
 
@@ -12,31 +12,44 @@ import { Subscription } from 'rxjs';
 export class AdminComponent implements OnInit, OnDestroy {
   titlePrefix: string = '';
   titleSuffix: string = '';
+  selectedNameStyle: NameStyle = 'normal';
   private subscriptions: Subscription = new Subscription();
 
-  constructor(private raffleService: RaffleService) { }
+  constructor(public raffleService: RaffleService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.subscriptions.add(
       this.raffleService.landingPageTitlePrefix$.subscribe(prefix => {
         this.titlePrefix = prefix;
+        this.cdr.detectChanges();
       })
     );
     this.subscriptions.add(
       this.raffleService.landingPageTitleSuffix$.subscribe(suffix => {
         this.titleSuffix = suffix;
+        this.cdr.detectChanges();
+      })
+    );
+    this.subscriptions.add(
+      this.raffleService.nameStyle$.subscribe(style => {
+        this.selectedNameStyle = style;
+        this.cdr.detectChanges();
       })
     );
   }
 
   saveTitlePrefix(): void {
     this.raffleService.setLandingPageTitlePrefix(this.titlePrefix);
-    alert('Title prefix saved!');
+    alert('Ön ek kaydedildi!');
   }
 
   saveTitleSuffix(): void {
     this.raffleService.setLandingPageTitleSuffix(this.titleSuffix);
-    alert('Title suffix saved!');
+    alert('Son ek kaydedildi!');
+  }
+
+  selectNameStyle(style: NameStyle): void {
+    this.raffleService.setNameStyle(style);
   }
 
   onFileSelect(event: Event): void {
@@ -61,32 +74,30 @@ export class AdminComponent implements OnInit, OnDestroy {
             return;
           }
 
-          const rawParticipants = result.data as any[]; // Treat as any initially for mapping
+          const rawParticipants = result.data as any[];
           const participants: Participant[] = rawParticipants.map(p => {
-            // Explicitly check for undefined or null for optional fields from CSV if needed
-            // PapaParse might return empty strings for missing values if skipEmptyLines is true for rows but not for fields
             return {
-              id: p.ID || p.id || '', // Handle potential case variations or if ID is missing
+              id: p.ID || p.id || '',
               name: p.Ad || p.name || '',
               surname: p.Soyad || p.surname || '',
-              company: p.Sirket || p.company,
-              position: p.Pozisyon || p.position,
-              mezunYil: p.MezunYil || p.mezunYil,
+              sirket: p.Sirket || p.company,
+              pozisyon: p.Pozisyon || p.position,
+              mezunYil: p.MezunYil || p.mezunYil ? Number(p.MezunYil || p.mezunYil) : undefined,
               mail: p.Mail || p.mail,
               telefon: p.Telefon || p.telefon,
               kartId: p.KartID || p.kartId
             };
-          }).filter(p => p.name && p.surname); // Basic filter for valid entries
+          }).filter(p => p.name && p.surname);
 
           if (participants.length > 0) {
             console.log('Mapped participants:', participants);
-            this.raffleService.addNames(participants);
+            this.raffleService.setParticipants(participants);
             alert(`${participants.length} participants loaded successfully!`);
           } else {
             console.warn('No valid participants found after mapping. Check CSV headers and content.');
             alert('No valid participants (with Ad and Soyad) found. Check CSV content and headers (ID, Ad, Soyad, Sirket, Pozisyon, MezunYil, Mail, Telefon, KartID).');
           }
-          element.value = ''; // Clear the file input
+          element.value = '';
         },
         error: (error) => {
           console.error('Error during PapaParse operation:', error);

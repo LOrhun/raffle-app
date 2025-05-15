@@ -85,8 +85,8 @@
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   backdrop-filter: blur(3px); /* Frosted glass effect */
   /* border: 1px solid rgba(255, 255, 255, 0.2); */ /* Border removed */
-  font-family: "Indie Flower", cursive;
-  font-size: 1.4rem; /* Adjusted for handwritten font legibility */
+  font-family: "Playwrite DK Loopet", cursive;
+  font-size: 1.2rem; /* Adjusted for handwritten font legibility */
   font-weight: normal; /* Lobster font has its own weight, often normal is best */
   opacity: 0;
   transition: opacity 1s ease-in-out;
@@ -97,6 +97,111 @@
 
 .background-name:hover { /* Just for visual testing if needed, not user interactive */
   transform: scale(1.1);
+}
+
+/* Reset parent styles when Win95 theme is active */
+.background-name.win95-style {
+  background: none;
+  backdrop-filter: none;
+  padding: 0;
+  border-radius: 0; /* Reset from default .background-name */
+  /* Ensure any other conflicting base styles are reset if necessary */
+}
+
+/* Windows 95 Style for Background Names */
+.win95-name-window {
+  /* position: absolute; */ /* Removed, should be positioned by parent */
+  background-color: #c0c0c0; /* Classic Win95 grey */
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* 3D effect */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  padding: 2px; /* Inner padding before title bar */
+  /* opacity: 0; */ /* Removed, Handled by Angular binding on parent */
+  /* transition: opacity 1s ease-in-out; */ /* Removed, Matches existing fade on parent */
+  z-index: 1;
+  pointer-events: none;
+  min-width: 200px; /* Minimum width for the window */
+}
+
+.win95-title-bar {
+  background-color: #000080; /* Classic Win95 blue title bar */
+  color: white;
+  padding: 3px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Tahoma", "Geneva", sans-serif; /* Classic UI font */
+  font-size: 0.8rem;
+  height: 20px; /* Typical height */
+}
+
+.win95-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.win95-buttons {
+  display: flex;
+}
+
+.win95-button {
+  background-color: #c0c0c0; /* Match window grey */
+  border: 1px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* 3D button effect */
+  width: 16px;
+  height: 14px;
+  margin-left: 2px;
+  font-family: "Tahoma", "Geneva", sans-serif;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: default; /* Non-functional */
+}
+
+.win95-button:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.win95-minimize,
+.win95-maximize {
+  /* Keep default styling */
+}
+
+.win95-close {
+  background-color: #ff0000; /* Red background */
+  color: white; /* White text/icon */
+  font-weight: bold;
+  border-color: #ffffff #600000 #600000 #ffffff; /* 3D effect for red button */
+}
+
+.win95-close:active {
+  border-color: #600000 #ffffff #ffffff #600000; /* Inverted 3D effect on press */
+}
+
+.win95-minimize,
+.win95-maximize,
+.win95-close {
+  line-height: 14px; /* Center content vertically */
+}
+
+.win95-body {
+  padding: 10px;
+  font-family: "Fixedsys", "Consolas", monospace;
+  font-size: 1rem;
+  background-color: #ffffff; /* White background for the body */
+  color: #000000; /* Black text for visibility */
+  border: 1px solid #808080; /* Inner border for the body */
+  margin: 2px; /* Small margin inside the outer border */
+  min-height: 30px; /* Ensure body has some height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .winner-text {
@@ -147,3 +252,129 @@
     transform: scale(1.05);
   }
 }
+
+/* Code Editor Style */
+.background-name.code-editor-style {
+  background-color: #1e1e1e; /* VS Code like dark background */
+  color: #d4d4d4; /* Default text color */
+  font-family: "Consolas", "Courier New", monospace;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #333;
+  font-size: 0.9rem; /* Slightly smaller for code feel */
+  /* Override default background-name styles if needed */
+  backdrop-filter: none; /* Remove blur if it was default */
+  text-shadow: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.code-editor-style .code-keyword {
+  color: #569cd6; /* Blue for keywords like const, function */
+  font-weight: bold;
+}
+.code-editor-style .code-variable {
+  color: #9cdcfe; /* Light blue for variable names */
+}
+.code-editor-style .code-string {
+  color: #ce9178; /* Orange/brown for string literals */
+}
+.code-editor-style .code-comment {
+  color: #6a9955; /* Green for comments */
+}
+
+/* Blueprint Style */
+.background-name.blueprint-style {
+  color: #ffffff;
+  font-family: "Architects Daughter", cursive, "Segoe Print", sans-serif;
+  padding: 0;
+  border: none;
+  background-color: transparent; /* No solid background color */
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  /* Override default background-name styles */
+  backdrop-filter: none;
+  box-shadow: none;
+  text-shadow:
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 3px #0073e6, /* Main blueprint glow */
+    0 0 5px #0073e6,
+    0 0 8px #0073e6;
+  /* min-width: 150px; Ensure some space for the grid */
+}
+
+.blueprint-style .blueprint-grid {
+  background-image:
+    linear-gradient(rgba(173, 216, 230, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(173, 216, 230, 0.3) 1px, transparent 1px);
+  background-size: 15px 15px;
+  padding: 10px 15px;
+  border: 1px dashed rgba(173, 216, 230, 0.7); /* Light blue dashed border */
+  border-radius: 2px;
+}
+
+.blueprint-style .blueprint-text {
+  display: inline-block; /* Allows transform */
+  /* transform: rotate(-2deg); Slightly skewed text */
+}
+
+/* Circuit Board Style */
+.background-name.circuit-board-style {
+  font-family: "Orbitron", sans-serif, "OCR A Std", monospace;
+  padding: 0;
+  border: none;
+  background-color: transparent; /* No solid background */
+  font-size: 0.9rem;
+  /* Override default background-name styles */
+  backdrop-filter: none;
+  text-shadow: none;
+  box-shadow: none;
+  color: #33ff33; /* Bright green trace color */
+  text-shadow:
+    0 0 2px #33ff33,
+    0 0 5px #33ff33,
+    0 0 8px #00cc00; /* Darker green glow */
+}
+
+.circuit-board-style .circuit-trace {
+  padding: 8px 12px;
+  border: 1px solid #006400; /* Dark Green border, like PCB substrate */
+  background-color: rgba(0, 50, 0, 0.6); /* Dark, semi-transparent green */
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+}
+
+/* Optional: Add pseudo-elements for trace-like lines if desired, can be complex */
+
+/* Version Control (Terminal) Style */
+.background-name.version-control-style {
+  background-color: rgba(30, 30, 30, 0.9); /* Dark terminal background */
+  color: #e0e0e0; /* Light grey text */
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  padding: 6px 10px;
+  border-radius: 3px;
+  border: 1px solid #444;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  /* Override default background-name styles */
+  backdrop-filter: none;
+  text-shadow: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  white-space: pre; /* Preserve whitespace for terminal look */
+}
+
+.version-control-style .vc-line {
+  display: block;
+}
+
+.version-control-style .vc-prompt {
+  color: #8ae234; /* Green for prompt like user@host */
+  margin-right: 5px;
+}
+
+.version-control-style .vc-output {
+  color: #729fcf; /* Lighter blue for command output */
+}
+
+/* Ensure the base .background-name has z-index and position if these styles don't override */
+/* Default .background-name already has position:absolute, transition and z-index:1 which is good. */

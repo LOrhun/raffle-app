@@ -1,0 +1,236 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.admin-page-content {
+  padding: 20px; /* Add some internal padding */
+}
+
+/* Styles for the new style selection buttons */
+.style-selection-container {
+  /* Uses d-flex and gap from Bootstrap classes on the element */
+}
+
+.style-select-btn {
+  /* Default btn-outline-secondary from Bootstrap is fine */
+  /* transition for active state */
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  min-width: 180px; /* Ensure buttons have a decent minimum width */
+}
+
+/* Override Bootstrap active/focus to make it more prominent for selection */
+.style-select-btn.active {
+  background-color: #0d6efd; /* Bootstrap primary blue */
+  color: white;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+}
+
+.style-select-btn:not(.active):hover {
+  background-color: #e9ecef; /* Light grey for hover on non-active */
+}
+
+.style-preview-button {
+  /* Container for label and preview inside button */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.style-label {
+  font-size: 0.9rem;
+}
+
+/* Renamed from .admin-preview-normal-name-small to .background-name-preview */
+.background-name-preview {
+  font-family: "Playwrite DK Loopet", cursive; /* Match landing page normal style font */
+  font-size: 0.9rem;
+  /* Uses p-2 border rounded from Bootstrap in HTML for padding/border */
+  white-space: nowrap;
+  display: inline-block;
+  color: #333; /* Default text color for preview on non-active button */
+}
+
+.style-select-btn.active .background-name-preview {
+  color: white; /* Text color for preview on active button */
+  /* border-color: rgba(255,255,255,0.7); /* Optional: lighter border on active */
+}
+
+/* Small Win95 Style Preview */
+.admin-preview-win95-window-small {
+  background-color: #c0c0c0;
+  border: 1px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  padding: 1px;
+  font-size: 0.8rem;
+  width: 120px; /* Fixed width for consistent button preview */
+  transform: scale(0.9); /* Scale down slightly to fit better */
+}
+
+.admin-preview-win95-title-bar-small {
+  background-color: #000080; /* Classic Win95 blue */
+  color: white;
+  padding: 1px 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Tahoma", "Geneva", sans-serif;
+  font-size: 0.7rem;
+  height: 14px;
+}
+
+.admin-preview-win95-title-text-small {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-preview-win95-buttons-small {
+  display: flex;
+}
+
+.admin-preview-win95-btn-small {
+  background-color: #c0c0c0;
+  border: 1px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  width: 10px;
+  height: 10px;
+  margin-left: 1px;
+  font-family: "Arial", sans-serif; /* Simpler font for tiny buttons */
+  font-size: 0.5rem; /* Tiny symbols */
+  font-weight: bold;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 10px;
+}
+
+.admin-preview-win95-body-small {
+  padding: 5px;
+  font-family: "Consolas", monospace;
+  font-size: 0.8rem;
+  color: #222;
+  text-align: center;
+  background-color: #c0c0c0; /* Ensure body has grey background */
+  min-height: 20px; /* Give it some body height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure active state text color is maintained for Win95 preview parts */
+.style-select-btn.active .admin-preview-win95-title-bar-small {
+  color: white; /* Already white, but ensure it stays */
+}
+.style-select-btn.active .admin-preview-win95-btn-small {
+  color: black; /* Already black, but ensure it stays */
+}
+.style-select-btn.active .admin-preview-win95-body-small {
+  color: #222; /* Already dark, ensure it stays */
+}
+
+/* Code Editor Style Preview */
+.admin-preview-code-editor-small {
+  background-color: #2d2d2d; /* Dark background */
+  color: #f8f8f2; /* Light default text */
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.8rem;
+  padding: 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  width: 150px; /* Give it a bit more width */
+  text-align: left;
+}
+.admin-preview-code-keyword {
+  color: #ff79c6; /* Pink */
+}
+.admin-preview-code-variable {
+  color: #8be9fd; /* Cyan */
+}
+.admin-preview-code-string {
+  color: #f1fa8c; /* Yellow */
+}
+
+/* Blueprint Style Preview */
+.admin-preview-blueprint-small {
+  background-color: #2a5298; /* Dark blue */
+  color: #ffffff;
+  font-family: "Consolas", "Lucida Console", monospace;
+  font-size: 0.8rem;
+  padding: 8px;
+  border: 1px dashed #a2a2a2;
+  white-space: nowrap;
+  width: 150px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 2px;
+}
+
+/* Circuit Board Style Preview */
+.admin-preview-circuit-board-small {
+  background-color: #003300; /* Dark green */
+  color: #00ff00; /* Bright green text */
+  font-family: "Orbitron", sans-serif; /* Techy font, needs import if not available */
+  font-size: 0.8rem;
+  padding: 8px;
+  border: 1px solid #004d00;
+  white-space: nowrap;
+  width: 150px;
+  text-align: center;
+  border-radius: 3px;
+  position: relative; /* For pseudo-elements if adding traces */
+  /* Basic traces using borders - can be enhanced with ::before/::after */
+  border-left: 2px solid #006400;
+  border-bottom: 2px solid #006400;
+}
+
+/* Version Control Style Preview */
+.admin-preview-version-control-small {
+  background-color: #f6f8fa; /* Light GitHub-like background */
+  color: #24292e; /* Dark text */
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.75rem;
+  padding: 8px;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  white-space: nowrap;
+  width: 160px; /* Wider for content */
+  text-align: left;
+}
+.admin-preview-vc-commit {
+  color: #0366d6; /* Blue for 'commit:' */
+  font-weight: bold;
+}
+.admin-preview-vc-hash {
+  color: #6a737d; /* Grey for hash */
+}
+.admin-preview-vc-message {
+  color: #24292e; /* Default dark for message */
+}
+
+/* Adjust text color of previews if button is active and preview has dark text */
+.style-select-btn.active .admin-preview-code-editor-small,
+.style-select-btn.active .admin-preview-code-keyword,
+.style-select-btn.active .admin-preview-code-variable,
+.style-select-btn.active .admin-preview-code-string,
+.style-select-btn.active .admin-preview-blueprint-small,
+.style-select-btn.active .admin-preview-circuit-board-small,
+.style-select-btn.active .admin-preview-version-control-small,
+.style-select-btn.active .admin-preview-vc-commit,
+.style-select-btn.active .admin-preview-vc-hash,
+.style-select-btn.active .admin-preview-vc-message {
+  /* For previews with their own dark text on light backgrounds,
+     they might not need to change to white when button is active.
+     Keeping their defined colors usually looks better unless they are hard to read.
+     If the preview itself has a dark background, its text should be light and will contrast with the active button.
+     For now, let's assume specific preview colors are dominant. We can override to white if needed. */
+  /* Example: if blueprint text needed to be white on active: */
+  /* .style-select-btn.active .admin-preview-blueprint-small { color: white; } */
+}

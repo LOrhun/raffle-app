@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+DK+Loopet:wght@100..400&family=Playwrite+MX+Guides&display=swap');
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -57,6 +57,7 @@ body {
   flex-grow: 1;
   overflow-y: auto; /* Allow scrolling for content within the page area */
   overflow-x: hidden;
+  min-height: 0; /* Added to help with flex sizing and overflow */
   position: relative; /* Ensure content area can also have its own stacking for children if needed */
   z-index: 1; /* Keep content above potential overlaps */
 }

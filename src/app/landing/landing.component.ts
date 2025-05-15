@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
-import { RaffleService, Participant, RaffleState } from '../raffle.service';
+import { RaffleService, Participant, RaffleState, NameStyle } from '../raffle.service';
 import { Subscription } from 'rxjs';
 
 interface BackgroundNameDisplay {
@@ -24,6 +24,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   titlePrefix: string = '';
   titleSuffix: string = '';
+  currentNameStyle: NameStyle = 'normal';
 
   backgroundNames: BackgroundNameDisplay[] = [];
   private nameDisplayInterval: any; // For 'idle' state interval
@@ -106,6 +107,13 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.raffleService.landingPageTitleSuffix$.subscribe(suffix => {
         this.titleSuffix = suffix;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.raffleService.nameStyle$.subscribe(style => {
+        this.currentNameStyle = style;
         this.cdr.detectChanges();
       })
     );

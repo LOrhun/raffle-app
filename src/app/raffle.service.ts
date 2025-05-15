@@ -8,19 +8,21 @@ export interface Participant {
   surname: string;  // From CSV: Soyad
   company?: string;  // From CSV: Sirket
   position?: string; // From CSV: Pozisyon
-  mezunYil?: string; // From CSV: MezunYil
+  mezunYil?: number; // From CSV: MezunYil
   mail?: string;     // From CSV: Mail
   telefon?: string;  // From CSV: Telefon
   kartId?: string;   // From CSV: KartID
 }
 
 export type RaffleState = 'idle' | 'running' | 'winner_revealed';
+export type NameStyle = 'normal' | 'win95' | 'codeEditor' | 'blueprint' | 'circuitBoard' | 'versionControl';
 
 const LS_PARTICIPANTS_KEY = 'raffle_participants';
 const LS_RAFFLE_STATE_KEY = 'raffle_state';
 const LS_WINNER_KEY = 'raffle_winner';
 const LS_LANDING_TITLE_PREFIX_KEY = 'raffle_landing_title_prefix';
 const LS_LANDING_TITLE_SUFFIX_KEY = 'raffle_landing_title_suffix';
+const LS_NAME_STYLE_KEY = 'raffle_name_style';
 
 @Injectable({
   providedIn: 'root'
@@ -41,13 +43,16 @@ export class RaffleService implements OnDestroy {
   private landingPageTitleSuffixSubject: BehaviorSubject<string>;
   landingPageTitleSuffix$: Observable<string>;
 
+  private nameStyleSubject: BehaviorSubject<NameStyle>;
+  nameStyle$: Observable<NameStyle>;
+
   private isBrowser: boolean;
 
   constructor(private ngZone: NgZone, @Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
-    // Initialize from LocalStorage or defaults
-    this.namesSubject = new BehaviorSubject<Participant[]>(this.loadFromLocalStorage(LS_PARTICIPANTS_KEY, []));
+    const loadedNames = this.loadFromLocalStorage(LS_PARTICIPANTS_KEY, [] as Participant[]);
+    this.namesSubject = new BehaviorSubject<Participant[]>(loadedNames.map(p => this.formatParticipantName(p)));
     this.names$ = this.namesSubject.asObservable();
 
     this.raffleStateSubject = new BehaviorSubject<RaffleState>(this.loadFromLocalStorage(LS_RAFFLE_STATE_KEY, 'idle'));
@@ -61,6 +66,9 @@ export class RaffleService implements OnDestroy {
 
     this.landingPageTitleSuffixSubject = new BehaviorSubject<string>(this.loadFromLocalStorage(LS_LANDING_TITLE_SUFFIX_KEY, ''));
     this.landingPageTitleSuffix$ = this.landingPageTitleSuffixSubject.asObservable();
+
+    this.nameStyleSubject = new BehaviorSubject<NameStyle>(this.loadFromLocalStorage(LS_NAME_STYLE_KEY, 'normal'));
+    this.nameStyle$ = this.nameStyleSubject.asObservable();
 
     // Listen to storage events from other tabs
     if (this.isBrowser) {
@@ -110,15 +118,55 @@ export class RaffleService implements OnDestroy {
         if (this.landingPageTitleSuffixSubject.value !== newSuffix) {
           this.landingPageTitleSuffixSubject.next(newSuffix);
         }
+      } else if (event.key === LS_NAME_STYLE_KEY && event.newValue) {
+        const newStyle = JSON.parse(event.newValue) as NameStyle;
+        if (this.nameStyleSubject.value !== newStyle) {
+          this.nameStyleSubject.next(newStyle);
+        }
       }
     });
   }
 
+  private formatNameString(name: string): string {
+    if (!name || name.length === 0) return '';
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  private formatSurnameString(surname: string): string {
+    if (!surname || surname.length === 0) return '';
+    return surname.toUpperCase();
+  }
+
+  private formatParticipantName(participant: Participant): Participant {
+    return {
+      ...participant,
+      name: this.formatNameString(participant.name),
+      surname: this.formatSurnameString(participant.surname),
+    };
+  }
+
   addNames(newNames: Participant[]): void {
     const currentNames = this.namesSubject.value;
-    const updatedNames = [...currentNames, ...newNames.filter(nn => !currentNames.some(cn => cn.name === nn.name && cn.surname === nn.surname))]; // Avoid duplicates
+    const formattedNewNames = newNames.map(p => this.formatParticipantName(p));
+    const updatedNames = [
+      ...currentNames,
+      ...formattedNewNames.filter(nn =>
+        !currentNames.some(cn =>
+          cn.name === nn.name && cn.surname === nn.surname
+        )
+      )
+    ];
     this.namesSubject.next(updatedNames);
     this.saveToLocalStorage(LS_PARTICIPANTS_KEY, updatedNames);
+  }
+
+  setParticipants(participants: Participant[]): void {
+    const formattedParticipants = participants.map(p => this.formatParticipantName(p));
+    this.namesSubject.next(formattedParticipants);
+    this.saveToLocalStorage(LS_PARTICIPANTS_KEY, formattedParticipants);
   }
 
   clearNames(): void {
@@ -175,6 +223,11 @@ export class RaffleService implements OnDestroy {
   setLandingPageTitleSuffix(suffix: string): void {
     this.landingPageTitleSuffixSubject.next(suffix);
     this.saveToLocalStorage(LS_LANDING_TITLE_SUFFIX_KEY, suffix);
+  }
+
+  setNameStyle(style: NameStyle): void {
+    this.nameStyleSubject.next(style);
+    this.saveToLocalStorage(LS_NAME_STYLE_KEY, style);
   }
 
   ngOnDestroy(): void {
