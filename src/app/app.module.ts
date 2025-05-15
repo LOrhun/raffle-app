@@ -9,6 +9,7 @@ import { LandingComponent } from './landing/landing.component';
 import { AdminComponent } from './admin/admin.component';
 import { AuthGuard } from './auth.guard';
 import { RaffleService } from './raffle.service';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 @NgModule({
   declarations: [

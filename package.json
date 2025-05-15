@@ -20,6 +20,7 @@
     "@angular/platform-server": "^19.2.0",
     "@angular/router": "^19.2.0",
     "@angular/ssr": "^19.2.12",
+    "@vercel/speed-insights": "^1.2.0",
     "express": "^4.18.2",
     "papaparse": "^5.5.2",
     "raffle-app": "file:",
