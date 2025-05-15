@@ -1,12 +1,21 @@
-<nav>
-  <div class="nav-container d-flex align-items-center" style="background-color: rgba(0, 55, 123, 0.93);">
-    <div class="nav-logo">
-      <img src="https://www.sakarya.edu.tr/logo-yatay.svg" style="width: 150px; height: 50px; margin:10px;" alt="logo" />
-    </div>
-    <div class="nav-title" style="color: white; font-size: 1rem; font-family: 'Be Vietnam Pro', sans-serif; margin-left: 10px; font-weight: 400;">
-      Sakarya Üniversitesi <br> Bilgisayar ve Bilişim Bilimleri Fakültesi
-    </div>
-  </div>
-</nav>
+<video *ngIf="showVideoBackground" muted playsinline id="appBackgroundVideo" #appBackgroundVideo>
+  <source src="assets/background.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+<div *ngIf="showVideoBackground" id="videoOverlay" #videoOverlay></div>
 
-<router-outlet></router-outlet>
+<div class="app-container">
+  <nav>
+    <div class="nav-container d-flex align-items-center" style="background-color: rgba(0, 55, 123, 0.93);">
+      <div class="nav-logo">
+        <img src="https://www.sakarya.edu.tr/logo-yatay.svg" style="width: 150px; height: 50px; margin:10px;" alt="logo" />
+      </div>
+      <div class="nav-title" style="color: white; font-size: 1rem; font-family: 'Be Vietnam Pro', sans-serif; margin-left: 10px; font-weight: 400;">
+        Sakarya Üniversitesi <br> Bilgisayar ve Bilişim Bilimleri Fakültesi
+      </div>
+    </div>
+  </nav>
+  <div class="content-area">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,10 +1,10 @@
 @keyframes breathing-background {
-  0% { background-color: #112D4E; } /* Light Red */
-  20% { background-color: #3F72AF; } /* Light Orange */
-  40% { background-color: #0F4C75; } /* Light Yellow */
-  60% { background-color: #3282B8; } /* Light Green */
-  80% { background-color: #6096B4; } /* Light Blue */
-  100% { background-color: #364F6B; } /* Light Indigo */
+  0% { background-color: rgba(17, 45, 78, 0.4); } /* Dark Blue Night - transparent */
+  20% { background-color: rgba(63, 114, 175, 0.4); } /* Steel Blue - transparent */
+  40% { background-color: rgba(15, 76, 117, 0.4); } /* Dark Cerulean - transparent */
+  60% { background-color: rgba(50, 130, 184, 0.4); } /* Pacific Blue - transparent */
+  80% { background-color: rgba(96, 150, 180, 0.4); } /* Summer Sky - transparent */
+  100% { background-color: rgba(54, 79, 107, 0.4); } /* Slate Gray - transparent */
 }
 
 .landing-container {
@@ -14,11 +14,23 @@
   justify-content: center;
   height: 100%; /* Changed from min-height: 100vh to fill parent */
   width: 100%;
-  animation: breathing-background 60s infinite alternate;
+  /* animation: breathing-background 60s infinite alternate; */ /* Removed to allow video bg */
+  background-color: transparent; /* Ensure it's transparent for video bg */
   position: relative;
   overflow: hidden; /* To contain absolute positioned names */
   padding: 20px; /* Add some padding */
   box-sizing: border-box;
+}
+
+.landing-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  animation: breathing-background 60s infinite alternate;
+  z-index: -1; /* Behind .landing-container's direct children, but above global video */
 }
 
 /* Styles for the main title text on the landing page */
@@ -72,14 +84,15 @@
   border-radius: 8px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   backdrop-filter: blur(3px); /* Frosted glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 1.2rem; /* Slightly larger */
-  font-weight: 500;   /* Medium weight */
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */ /* Border removed */
+  font-family: "Indie Flower", cursive;
+  font-size: 1.4rem; /* Adjusted for handwritten font legibility */
+  font-weight: normal; /* Lobster font has its own weight, often normal is best */
   opacity: 0;
-  transition: opacity 1s ease-in-out; /* Keep fade-in/out same */
-  white-space: nowrap; /* Prevent names from wrapping */
-  z-index: 1; /* Ensure background names are behind main content and winner */
-  pointer-events: none; /* Make names non-interactive */
+  transition: opacity 1s ease-in-out;
+  white-space: nowrap;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .background-name:hover { /* Just for visual testing if needed, not user interactive */

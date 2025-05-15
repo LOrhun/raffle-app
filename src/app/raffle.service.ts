@@ -1,4 +1,5 @@
-import { Injectable, OnDestroy, NgZone } from '@angular/core';
+import { Injectable, OnDestroy, NgZone, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Participant {
@@ -32,7 +33,11 @@ export class RaffleService implements OnDestroy {
   private winnerSubject: BehaviorSubject<Participant | null>;
   winner$: Observable<Participant | null>;
 
-  constructor(private ngZone: NgZone) {
+  private isBrowser: boolean;
+
+  constructor(private ngZone: NgZone, @Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
     // Initialize from LocalStorage or defaults
     this.namesSubject = new BehaviorSubject<Participant[]>(this.loadFromLocalStorage(LS_PARTICIPANTS_KEY, []));
     this.names$ = this.namesSubject.asObservable();
@@ -44,11 +49,13 @@ export class RaffleService implements OnDestroy {
     this.winner$ = this.winnerSubject.asObservable();
 
     // Listen to storage events from other tabs
-    window.addEventListener('storage', this.handleStorageChange.bind(this));
+    if (this.isBrowser) {
+      window.addEventListener('storage', this.handleStorageChange.bind(this));
+    }
   }
 
   private loadFromLocalStorage<T>(key: string, defaultValue: T): T {
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (this.isBrowser && window.localStorage) {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : defaultValue;
     }
@@ -56,12 +63,13 @@ export class RaffleService implements OnDestroy {
   }
 
   private saveToLocalStorage<T>(key: string, value: T): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (this.isBrowser && window.localStorage) {
       window.localStorage.setItem(key, JSON.stringify(value));
     }
   }
 
   private handleStorageChange(event: StorageEvent): void {
+    if (!this.isBrowser) return; // Should not be called on server anyway, but as a safeguard
     this.ngZone.run(() => { // Ensure updates run in Angular's zone
       if (event.key === LS_PARTICIPANTS_KEY && event.newValue) {
         const newNames = JSON.parse(event.newValue);
@@ -136,6 +144,8 @@ export class RaffleService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    window.removeEventListener('storage', this.handleStorageChange.bind(this));
+    if (this.isBrowser) {
+      window.removeEventListener('storage', this.handleStorageChange.bind(this));
+    }
   }
 }

@@ -1,13 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+
 /* You can add global styles to this file, and also import other style files */
 
-html, body {
+/* Global Styles */
+
+html, body, app-root {
   height: 100%;
   margin: 0;
-  overflow: hidden; /* Prevent scrolling on the body/html */
-  font-family: Arial, sans-serif; /* Example base font */
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll if video slightly overflows */
 }
 
-app-root {
-  display: block; /* Or flex, depending on direct children management */
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  position: relative; /* For z-index stacking context if needed */
+}
+
+#appBackgroundVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100; /* Ensure it's behind all other content */
+  background-size: cover;
+  filter: blur(5px); /* Add blur effect */
+  /* Optional: add a dark overlay if video is too bright */
+  /* background-color: rgba(0,0,0,0.5); */
+}
+
+#videoOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
+  background-color: black;
+  opacity: 0; /* Start fully transparent */
+  z-index: -99; /* Above video, below other content */
+  pointer-events: none; /* Allow clicks to pass through */
+  transition: opacity 1s ease-in-out; /* 1-second fade */
+}
+
+/* Ensure app content is above the video and overlay */
+.app-container {
+  position: relative; /* Establishes a stacking context */
+  z-index: 1; /* Ensures this is above the video which is z-index -100 */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-area {
+  flex-grow: 1;
+  overflow-y: auto; /* Allow scrolling for content within the page area */
+  overflow-x: hidden;
+  position: relative; /* Ensure content area can also have its own stacking for children if needed */
+  z-index: 1; /* Keep content above potential overlaps */
+}
+
+/* You might need to adjust navbar styling if it's also meant to be transparent over the video */
+app-root > .app-container > nav {
+  position: relative; /* Or sticky/fixed depending on desired behavior */
+  z-index: 2; /* Ensure navbar is above content area and video */
+  /* background-color: rgba(0, 55, 123, 0.75); Example: make it slightly transparent */
 }
