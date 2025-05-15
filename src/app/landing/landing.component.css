@@ -1,0 +1,136 @@
+@keyframes breathing-background {
+  0% { background-color: #112D4E; } /* Light Red */
+  20% { background-color: #3F72AF; } /* Light Orange */
+  40% { background-color: #0F4C75; } /* Light Yellow */
+  60% { background-color: #3282B8; } /* Light Green */
+  80% { background-color: #6096B4; } /* Light Blue */
+  100% { background-color: #364F6B; } /* Light Indigo */
+}
+
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Changed from min-height: 100vh to fill parent */
+  width: 100%;
+  animation: breathing-background 60s infinite alternate;
+  position: relative;
+  overflow: hidden; /* To contain absolute positioned names */
+  padding: 20px; /* Add some padding */
+  box-sizing: border-box;
+}
+
+/* Styles for the main title text on the landing page */
+.landing-title-text {
+  font-size: clamp(2.5rem, 8vw, 5rem); /* Example responsive font size, adjust as needed */
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 800;
+  text-align: center;
+  color: #FFFFFF;
+  text-shadow: 2px 2px 3px #000000;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  margin-bottom: 20px; /* Space below title, adjust as needed */
+  line-height: 1.2; /* Adjust line height for multi-line text */
+  position: relative; /* Ensure z-index is applied correctly */
+  z-index: 10; /* To be above background names (z-index: 1) */
+}
+
+/* Add specific rules for when landing-title-text is hidden to remove its layout space */
+.landing-title-text.hidden {
+  height: 0;
+  margin-bottom: 0; /* Overrides the margin-bottom from .landing-title-text */
+  overflow: hidden; /* Clips content during height transition if any, or if not fully 0 */
+  /* The opacity and transform changes for hiding are handled by the general .hidden class */
+  /* and animated by the transition on .landing-title-text */
+}
+
+.big-text {
+  font-size: clamp(2.5rem, 10vw, 6rem); /* Responsive font size */
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.6), 0 0 10px rgba(255,255,255,0.3);
+  z-index: 10;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* General hidden class for elements that should fade and shrink out */
+.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  /* Add a transition if you want this to be animated */
+  /* For example, if the element it applies to also has a transition property */
+  /* transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; */
+}
+
+.background-name {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.7); /* Brighter semi-transparent white */
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(3px); /* Frosted glass effect */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 1.2rem; /* Slightly larger */
+  font-weight: 500;   /* Medium weight */
+  opacity: 0;
+  transition: opacity 1s ease-in-out; /* Keep fade-in/out same */
+  white-space: nowrap; /* Prevent names from wrapping */
+  z-index: 1; /* Ensure background names are behind main content and winner */
+  pointer-events: none; /* Make names non-interactive */
+}
+
+.background-name:hover { /* Just for visual testing if needed, not user interactive */
+  transform: scale(1.1);
+}
+
+.winner-text {
+  /* background-color: rgba(0, 55, 123, 0.93); */ /* Old background */
+  /* background-color: rgba(25, 55, 125, 0.65); */ /* Previous frosted glass - more transparent */
+  background-color: rgba(25, 55, 125, 0.2); /* Even more transparent frosted glass */
+  backdrop-filter: blur(8px); /* Frosted glass effect */
+  border-radius: 15px; /* Rounded corners for card look */
+  padding: 30px; /* Adjusted padding for the card */
+  max-width: 80%; /* Prevent card from being too wide on large screens */
+  box-sizing: border-box; /* Ensure padding is included in width/height */
+
+  /* Existing styles for text, animation, etc. */
+  font-size: clamp(2rem, 8vw, 4rem); /* Slightly adjusted max font size if needed */
+  font-weight: bold;
+  color: white; /* Brighter Gold for main winner name */
+  z-index: 20;
+  margin-top: 30px;
+  text-align: center;
+  animation: winner-appear 1s ease-out, pulse-winner 2s infinite alternate 1s;
+  /* padding: 20px; /* Replaced by more specific padding above */
+}
+
+.winner-details {
+  font-size: clamp(1rem, 4vw, 2rem); /* Smaller than main winner name */
+  color: white;
+  margin-top: 10px;
+  text-align: center; /* Ensure explicit centering for these details */
+  line-height: 1.3;
+}
+
+@keyframes winner-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotate(-5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes pulse-winner {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}

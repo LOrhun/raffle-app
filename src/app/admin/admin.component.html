@@ -1,0 +1,18 @@
+<div>
+  <h2>Admin Panel</h2>
+
+  <div>
+    <h3>Upload Participants (CSV)</h3>
+    <p>CSV must have 'name' and 'surname' columns.</p>
+    <input type="file" (change)="onFileSelect($event)" accept=".csv">
+  </div>
+
+  <hr>
+
+  <div>
+    <h3>Raffle Controls</h3>
+    <button (click)="startRaffle()">Start Raffle</button>
+    <button (click)="resetRaffle()">Reset Raffle (Clear Names and State)</button>
+    <button (click)="resetRaffleStateOnly()" style="margin-left: 10px;">Reset Raffle (Keep Names)</button>
+  </div>
+</div>

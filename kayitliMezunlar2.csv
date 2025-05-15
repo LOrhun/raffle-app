@@ -1,0 +1,14 @@
+﻿ID,Ad,Soyad,MezunYil,Mail,Telefon,Sirket,Pozisyon,KartID
+0,YUSUF,ÖZASLAN,2024,yusufozaslan@sakarya.edu.tr,05555555555,SAU,Arş. Gör.,kart_0
+1,LÜTFÜ ORHUN,İNAN,2024,lorhuninan@sakarya.edu.tr,05444444444,SAU YAZILIM,Arş. Gör.,kart_1
+2,YUSUF,SÖNMEZ,2024,yusufsonmez@sakarya.edu.tr,05666666666,SAU BİLİSİM,Arş. Gör.,kart_2
+3,ZEYNEPNUR,ALDİNÇER,2024,zaldinc@ogr.sakarya.edu.tr,05222222222,asel,muhendis,kart_3
+4,KAYAHAN,ŞANLI,2023,ksanli@gmail.com,05111111111,İTÜ,Memur,kart_4
+5,SALİH,GÖKDEMİR,2014,,,samsung,müdür,kart_5
+6,VEDAT,ARSLAN,2024,,,,,kart_6
+7,SERAY,GOK,2011,,,,,kart_7
+8,JAMİLYA,ASLAN,2000,,,,,kart_8
+9,MUSTAFA,AKGÜN,2012,,,,,kart_9
+10,SERKAN,YILMAZ,2017,,,apple,yazılımcı,kart_10
+11,MEHMET,ATAŞ,2024,mehmet@gmail.com,,ebebek,ik uzmanı,kart_11
+12,ZEKERİYA,ALTUNKAYNAK,2024,,0666666666,LG,Mühendis,kart_12

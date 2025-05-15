@@ -1,0 +1,25 @@
+<div class="landing-container">
+  <div class="landing-title-text"
+       [class.hidden]="raffleState === 'running' || raffleState === 'winner_revealed'">
+    Sakarya Üniversitesi <br>
+    Bilgisayar ve Bilişim Bilimleri Fakültesi <br>
+    Mezunlar Günü
+  </div>
+
+  <div *ngIf="winner" class="winner-text">
+    <div>Kazanan: {{ winner.name }} {{ winner.surname }} <ng-container *ngIf="winner.mezunYil">({{ winner.mezunYil }})</ng-container></div>
+    <div *ngIf="winner && (winner.company || winner.position)" class="winner-details">
+      {{ winner.company }}{{ (winner.company && winner.position) ? ' - ' : '' }}{{ winner.position }}
+    </div>
+  </div>
+
+  <!-- Background names will be dynamically added here by the component -->
+  <div class="background-name"
+       *ngFor="let bgName of backgroundNames; trackBy: trackById"
+       [style.left]="bgName.x + '%'"
+       [style.top]="bgName.y + '%'"
+       [style.opacity]="bgName.opacity"
+       >
+    {{ bgName.text }}
+  </div>
+</div>

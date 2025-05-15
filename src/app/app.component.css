@@ -1,0 +1,33 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Fills height from app-root */
+}
+
+nav {
+  /* Let nav take its natural height. Add specific styling as needed. */
+  /* background-color: #f0f0f0; /* Example background */
+  /* padding: 10px; */
+  flex-shrink: 0; /* Prevent nav from shrinking if content is too large */
+}
+
+/* Basic styling for the added nav links */
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 15px; /* Spacing between links */
+  align-items: center; /* Align with logo if they are siblings */
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333; /* Example link color */
+}
+
+.content-area {
+  flex-grow: 1; /* Takes up all remaining space */
+  overflow: hidden; /* Prevents this container from scrolling */
+  position: relative; /* For potential absolute positioning of children if needed */
+}
