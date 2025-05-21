@@ -1,6 +1,21 @@
 <div class="slideshow-container">
-  <video #videoPlayer class="video-player" muted playsinline>
-    <source [src]="videoUrl" type="video/mp4">
+  <!-- Regular video player for local and drive videos -->
+  <video *ngIf="currentSource.type !== 'youtube'"
+         #videoPlayer
+         class="video-player"
+         muted
+         playsinline>
+    <source [src]="videoService.processVideoUrl(currentSource)" type="video/mp4">
     Your browser does not support the video tag.
   </video>
+
+  <!-- YouTube embed for YouTube videos -->
+  <iframe *ngIf="currentSource.type === 'youtube'"
+          #youtubeFrame
+          class="video-player"
+          [src]="videoService.processVideoUrl(currentSource)"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+  </iframe>
 </div>

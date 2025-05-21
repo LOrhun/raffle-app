@@ -1,4 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { VideoService, VideoSource } from '../services/video.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-slideshow',
@@ -6,23 +8,60 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
   styleUrls: ['./slideshow.component.css'],
   standalone: false
 })
-export class SlideshowComponent implements OnInit {
+export class SlideshowComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  @ViewChild('youtubeFrame') youtubeFrame!: ElementRef<HTMLIFrameElement>;
 
-  // Replace this URL with your Google Drive video URL
-  videoUrl: string = 'https://drive.google.com/file/d/0BwHmtM9HI_CSQ3BjVlpQNVJkdUk/view?usp=sharing&resourcekey=0-FulSdv2nrfdkJ7w9nBfeMg';
+  currentSource: VideoSource;
+  private subscription: Subscription;
+
+  constructor(private videoService: VideoService) {
+    this.currentSource = this.videoService.getVideoSource();
+    this.subscription = new Subscription();
+  }
 
   ngOnInit() {
-    // Initialize component
+    this.subscription.add(
+      this.videoService.getVideoSource().subscribe(source => {
+        this.currentSource = source;
+        this.updateVideoSource();
+      })
+    );
   }
 
   ngAfterViewInit() {
-    // Set up video loop
-    const video = this.videoPlayer.nativeElement;
-    video.loop = true;
-    video.play().catch(error => {
-      console.error('Error playing video:', error);
-    });
+    this.updateVideoSource();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  private updateVideoSource() {
+    if (this.currentSource.type === 'youtube') {
+      this.setupYoutubeVideo();
+    } else {
+      this.setupRegularVideo();
+    }
+  }
+
+  private setupYoutubeVideo() {
+    if (this.youtubeFrame) {
+      const processedUrl = this.videoService.processVideoUrl(this.currentSource);
+      this.youtubeFrame.nativeElement.src = processedUrl;
+    }
+  }
+
+  private setupRegularVideo() {
+    if (this.videoPlayer) {
+      const video = this.videoPlayer.nativeElement;
+      video.src = this.videoService.processVideoUrl(this.currentSource);
+      video.playbackRate = this.currentSource.playbackSpeed;
+      video.loop = true;
+      video.play().catch(error => {
+        console.error('Error playing video:', error);
+      });
+    }
   }
 
   // Method to get the direct video URL from Google Drive

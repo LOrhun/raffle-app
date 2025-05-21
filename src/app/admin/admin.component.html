@@ -135,6 +135,47 @@
           </div>
         </div>
       </div>
+
+      <div class="video-controls">
+        <h3>Video Settings</h3>
+
+        <div class="form-group">
+          <label for="sourceType">Video Source Type:</label>
+          <select id="sourceType" [(ngModel)]="videoSource.type" (change)="onSourceTypeChange()">
+            <option *ngFor="let type of sourceTypes" [value]="type.value">
+              {{type.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="videoSource.type === 'local'">
+          <label for="videoFile">Select Video File:</label>
+          <input type="file"
+                 id="videoFile"
+                 accept="video/*"
+                 (change)="onFileSelected($event)">
+        </div>
+
+        <div class="form-group" *ngIf="videoSource.type === 'youtube' || videoSource.type === 'drive'">
+          <label for="videoUrl">Video URL:</label>
+          <input type="text"
+                 id="videoUrl"
+                 [(ngModel)]="videoSource.url"
+                 (change)="updateVideoSource()"
+                 placeholder="Enter video URL">
+        </div>
+
+        <div class="form-group">
+          <label for="playbackSpeed">Playback Speed:</label>
+          <select id="playbackSpeed"
+                  [(ngModel)]="videoSource.playbackSpeed"
+                  (change)="updateVideoSource()">
+            <option *ngFor="let speed of playbackSpeeds" [value]="speed">
+              {{speed}}x
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 </div>

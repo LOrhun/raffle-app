@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { RaffleService, Participant, NameStyle } from '../raffle.service';
 import * as Papa from 'papaparse';
 import { Subscription } from 'rxjs';
+import { VideoService, VideoSource } from '../services/video.service';
 
 @Component({
   selector: 'app-admin',
@@ -14,8 +15,21 @@ export class AdminComponent implements OnInit, OnDestroy {
   titleSuffix: string = '';
   selectedNameStyle: NameStyle = 'normal';
   private subscriptions: Subscription = new Subscription();
+  videoSource: VideoSource = {
+    type: 'local',
+    url: '',
+    playbackSpeed: 1
+  };
 
-  constructor(public raffleService: RaffleService, private cdr: ChangeDetectorRef) { }
+  sourceTypes = [
+    { value: 'local', label: 'Local File' },
+    { value: 'youtube', label: 'YouTube' },
+    { value: 'drive', label: 'Google Drive' }
+  ];
+
+  playbackSpeeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+
+  constructor(public raffleService: RaffleService, private cdr: ChangeDetectorRef, private videoService: VideoService) { }
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -118,6 +132,26 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   resetRaffleStateOnly(): void {
     this.raffleService.resetRaffleStateAndWinner();
+  }
+
+  onSourceTypeChange() {
+    this.videoSource.url = ''; // Clear URL when source type changes
+  }
+
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.videoSource.url = e.target.result;
+        this.updateVideoSource();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  updateVideoSource() {
+    this.videoService.setVideoSource(this.videoSource);
   }
 
   ngOnDestroy(): void {
