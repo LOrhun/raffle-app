@@ -11,12 +11,14 @@ import { AuthGuard } from './auth.guard';
 import { RaffleService } from './raffle.service';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
+import { SlideshowComponent } from './slideshow/slideshow.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingComponent,
-    AdminComponent
+    AdminComponent,
+    SlideshowComponent
   ],
   imports: [
     BrowserModule,
