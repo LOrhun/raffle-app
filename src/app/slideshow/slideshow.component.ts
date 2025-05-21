@@ -12,11 +12,14 @@ export class SlideshowComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('youtubeFrame') youtubeFrame!: ElementRef<HTMLIFrameElement>;
 
-  currentSource: VideoSource;
+  currentSource: VideoSource = {
+    type: 'local',
+    url: '',
+    playbackSpeed: 1
+  };
   private subscription: Subscription;
 
-  constructor(private videoService: VideoService) {
-    this.currentSource = this.videoService.getVideoSource();
+  constructor(public videoService: VideoService) {
     this.subscription = new Subscription();
   }
 
