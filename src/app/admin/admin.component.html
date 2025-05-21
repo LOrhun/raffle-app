@@ -136,44 +136,81 @@
         </div>
       </div>
 
-      <div class="video-controls">
-        <h3>Video Settings</h3>
+      <div class="admin-section card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">Slideshow Kontrolleri</h3>
+          <p class="card-text text-muted small">Slideshow için medya kaynaklarını ve oynatma hızını yönetin.</p>
 
-        <div class="form-group">
-          <label for="sourceType">Video Source Type:</label>
-          <select id="sourceType" [(ngModel)]="videoSource.type" (change)="onSourceTypeChange()">
-            <option *ngFor="let type of sourceTypes" [value]="type.value">
-              {{type.label}}
-            </option>
-          </select>
+          <!-- Add New Source -->
+          <div class="mb-4">
+            <h4 class="h5">Yeni Kaynak Ekle</h4>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <select class="form-select" [(ngModel)]="newSource.type" (change)="onSourceTypeChange()">
+                  <option value="local">Yerel Dosya</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="drive">Google Drive</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <input type="text" class="form-control" [(ngModel)]="newSource.name" placeholder="Kaynak Adı">
+              </div>
+              <div class="col-md-4">
+                <!-- URL input for YouTube and Drive -->
+                <input *ngIf="newSource.type !== 'local'" type="text" class="form-control" [(ngModel)]="newSource.url" placeholder="URL">
+                <!-- File input for local files -->
+                <input *ngIf="newSource.type === 'local'" type="file" class="form-control" (change)="onLocalFileSelect($event)" accept="video/*">
+              </div>
+            </div>
+            <button class="btn btn-primary mt-2" (click)="addSlideshowSource()" [disabled]="!isSourceValid()">Kaynak Ekle</button>
+          </div>
+
+          <!-- Existing Sources -->
+          <div class="mb-4">
+            <h4 class="h5">Mevcut Kaynaklar</h4>
+            <div class="list-group">
+              <div *ngFor="let source of slideshowSources; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ source.name }}</strong>
+                  <small class="d-block text-muted">{{ source.type }} - {{ source.url }}</small>
+                </div>
+                <button class="btn btn-danger btn-sm" (click)="removeSlideshowSource(i)">Kaldır</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Playback Speed -->
+          <div>
+            <h4 class="h5">Oynatma Hızı</h4>
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <input type="range" class="form-range" min="0.5" max="2" step="0.1" [(ngModel)]="playbackSpeed">
+              </div>
+              <div class="col-md-3">
+                <span class="form-text">{{ playbackSpeed }}x</span>
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-primary" (click)="updatePlaybackSpeed()">Hızı Güncelle</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="form-group" *ngIf="videoSource.type === 'local'">
-          <label for="videoFile">Select Video File:</label>
-          <input type="file"
-                 id="videoFile"
-                 accept="video/*"
-                 (change)="onFileSelected($event)">
-        </div>
-
-        <div class="form-group" *ngIf="videoSource.type === 'youtube' || videoSource.type === 'drive'">
-          <label for="videoUrl">Video URL:</label>
-          <input type="text"
-                 id="videoUrl"
-                 [(ngModel)]="videoSource.url"
-                 (change)="updateVideoSource()"
-                 placeholder="Enter video URL">
-        </div>
-
-        <div class="form-group">
-          <label for="playbackSpeed">Playback Speed:</label>
-          <select id="playbackSpeed"
-                  [(ngModel)]="videoSource.playbackSpeed"
-                  (change)="updateVideoSource()">
-            <option *ngFor="let speed of playbackSpeeds" [value]="speed">
-              {{speed}}x
-            </option>
-          </select>
+      <div class="admin-section card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">Sayfa Bağlantıları</h3>
+          <p class="card-text text-muted small">Aşağıdaki butonları kullanarak sayfaları yeni sekmede açabilirsiniz.</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a href="/" target="_blank" class="btn btn-primary me-md-2">
+              <i class="bi bi-box-arrow-up-right me-1"></i>
+              Açılış Sayfasını Aç
+            </a>
+            <a href="/slideshow" target="_blank" class="btn btn-primary">
+              <i class="bi bi-box-arrow-up-right me-1"></i>
+              Slideshow Sayfasını Aç
+            </a>
+          </div>
         </div>
       </div>
     </div>

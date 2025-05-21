@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingComponent } from './landing/landing.component';
 import { AdminComponent } from './admin/admin.component';
-import { AuthGuard } from './auth.guard';
 import { SlideshowComponent } from './slideshow/slideshow.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },

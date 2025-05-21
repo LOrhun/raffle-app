@@ -9,16 +9,15 @@ import { LandingComponent } from './landing/landing.component';
 import { AdminComponent } from './admin/admin.component';
 import { AuthGuard } from './auth.guard';
 import { RaffleService } from './raffle.service';
+import { SlideshowService } from './slideshow/slideshow.service';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
-import { SlideshowComponent } from './slideshow/slideshow.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingComponent,
-    AdminComponent,
-    SlideshowComponent
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +28,8 @@ import { SlideshowComponent } from './slideshow/slideshow.component';
   providers: [
     provideClientHydration(withEventReplay()),
     AuthGuard,
-    RaffleService
+    RaffleService,
+    SlideshowService
   ],
   bootstrap: [AppComponent]
 })

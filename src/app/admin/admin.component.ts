@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { RaffleService, Participant, NameStyle } from '../raffle.service';
+import { SlideshowService, SlideshowSource } from '../slideshow/slideshow.service';
 import * as Papa from 'papaparse';
 import { Subscription } from 'rxjs';
-import { VideoService, VideoSource } from '../services/video.service';
 
 @Component({
   selector: 'app-admin',
@@ -14,22 +14,21 @@ export class AdminComponent implements OnInit, OnDestroy {
   titlePrefix: string = '';
   titleSuffix: string = '';
   selectedNameStyle: NameStyle = 'normal';
-  private subscriptions: Subscription = new Subscription();
-  videoSource: VideoSource = {
+  slideshowSources: SlideshowSource[] = [];
+  newSource: SlideshowSource = {
     type: 'local',
     url: '',
-    playbackSpeed: 1
+    name: ''
   };
+  selectedFile: File | null = null;
+  playbackSpeed: number = 1;
+  private subscriptions: Subscription = new Subscription();
 
-  sourceTypes = [
-    { value: 'local', label: 'Local File' },
-    { value: 'youtube', label: 'YouTube' },
-    { value: 'drive', label: 'Google Drive' }
-  ];
-
-  playbackSpeeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
-
-  constructor(public raffleService: RaffleService, private cdr: ChangeDetectorRef, private videoService: VideoService) { }
+  constructor(
+    public raffleService: RaffleService,
+    public slideshowService: SlideshowService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -47,6 +46,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.raffleService.nameStyle$.subscribe(style => {
         this.selectedNameStyle = style;
+        this.cdr.detectChanges();
+      })
+    );
+    this.subscriptions.add(
+      this.slideshowService.sources$.subscribe(sources => {
+        this.slideshowSources = sources;
+        this.cdr.detectChanges();
+      })
+    );
+    this.subscriptions.add(
+      this.slideshowService.playbackSpeed$.subscribe(speed => {
+        this.playbackSpeed = speed;
         this.cdr.detectChanges();
       })
     );
@@ -134,24 +145,74 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.raffleService.resetRaffleStateAndWinner();
   }
 
-  onSourceTypeChange() {
-    this.videoSource.url = ''; // Clear URL when source type changes
+  onSourceTypeChange(): void {
+    // Reset URL and file when source type changes
+    this.newSource.url = '';
+    this.selectedFile = null;
   }
 
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.videoSource.url = e.target.result;
-        this.updateVideoSource();
-      };
-      reader.readAsDataURL(file);
+  onLocalFileSelect(event: Event): void {
+    const element = event.currentTarget as HTMLInputElement;
+    const fileList: FileList | null = element.files;
+
+    if (fileList && fileList.length > 0) {
+      this.selectedFile = fileList[0];
+      // Create a local URL for the file
+      this.newSource.url = URL.createObjectURL(this.selectedFile);
+
+      // If name is not set, use the file name
+      if (!this.newSource.name) {
+        this.newSource.name = this.selectedFile.name;
+      }
     }
   }
 
-  updateVideoSource() {
-    this.videoService.setVideoSource(this.videoSource);
+  isSourceValid(): boolean {
+    if (!this.newSource.name) return false;
+
+    switch (this.newSource.type) {
+      case 'local':
+        return !!this.selectedFile;
+      case 'youtube':
+        return !!this.newSource.url && this.newSource.url.includes('youtube.com');
+      case 'drive':
+        return !!this.newSource.url && this.newSource.url.includes('drive.google.com');
+      default:
+        return false;
+    }
+  }
+
+  addSlideshowSource(): void {
+    if (this.isSourceValid()) {
+      // For local files, we need to handle the file upload
+      if (this.newSource.type === 'local' && this.selectedFile) {
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append('file', this.selectedFile);
+
+        // Here you would typically upload the file to your server
+        // For now, we'll use the local URL
+        this.slideshowService.addSource(this.newSource);
+      } else {
+        this.slideshowService.addSource(this.newSource);
+      }
+
+      // Reset the form
+      this.newSource = {
+        type: 'local',
+        url: '',
+        name: ''
+      };
+      this.selectedFile = null;
+    }
+  }
+
+  removeSlideshowSource(index: number): void {
+    this.slideshowService.removeSource(index);
+  }
+
+  updatePlaybackSpeed(): void {
+    this.slideshowService.setPlaybackSpeed(this.playbackSpeed);
   }
 
   ngOnDestroy(): void {
