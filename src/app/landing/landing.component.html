@@ -1,4 +1,11 @@
 <div class="landing-container" [class.breathing-background]="raffleState === 'idle' || raffleState === 'winner_revealed'">
+  <div class="background-slideshow">
+    <div *ngFor="let i of [1,2,3,4,5,6,7,8]"
+         class="background-image"
+         [class.active]="currentImage === i"
+         [style.background-image]="'url(assets/' + i + (i === 1 ? '.png' : '.jpg') + ')'">
+    </div>
+  </div>
   <div class="landing-title-text"
        [class.hidden]="raffleState === 'running' || raffleState === 'winner_revealed'">
     <div *ngIf="titlePrefix" class="title-prefix">{{ titlePrefix }}</div>
@@ -23,7 +30,8 @@
          'code-editor-style': currentNameStyle === 'codeEditor',
          'blueprint-style': currentNameStyle === 'blueprint',
          'circuit-board-style': currentNameStyle === 'circuitBoard',
-         'version-control-style': currentNameStyle === 'versionControl'
+         'version-control-style': currentNameStyle === 'versionControl',
+         'hidden': !showNames
        }"
        [style.left.%]="name.x"
        [style.top.%]="name.y"
@@ -77,5 +85,18 @@
       <span class="vc-line vc-output">{{ name.text.replace(' ', '_') + '.conf' }}</span>
     </ng-container>
 
+  </div>
+  <div class="control-buttons">
+    <button class="control-btn toggle-names" (click)="toggleNames()" [class.active]="showNames">
+      <i class="fas fa-eye"></i>
+    </button>
+    <div class="right-buttons">
+      <button class="control-btn start-raffle" (click)="startRaffle()" [disabled]="raffleState === 'running'">
+        <i class="fas fa-play"></i>
+      </button>
+      <button class="control-btn reset-raffle" (click)="resetRaffle()" [disabled]="raffleState === 'running'">
+        <i class="fas fa-redo"></i>
+      </button>
+    </div>
   </div>
 </div>

@@ -40,6 +40,11 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
+  showNames = true;
+
+  currentImage = 1;
+  private slideshowInterval: any;
+
   constructor(
     private raffleService: RaffleService,
     private cdr: ChangeDetectorRef,
@@ -117,6 +122,16 @@ export class LandingComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
+
+    this.subscriptions.add(
+      this.raffleService.namesVisible$.subscribe(visible => {
+        this.showNames = visible;
+        this.cdr.detectChanges();
+      })
+    );
+
+    // Start the background slideshow
+    this.startSlideshow();
   }
 
   trackById(index: number, item: BackgroundNameDisplay): number {
@@ -184,7 +199,7 @@ export class LandingComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const nameToShow = this.backgroundNames.find(n => n.id === nameId);
       if (nameToShow) {
-        nameToShow.opacity = 1;
+        nameToShow.opacity = 0.3;
         this.cdr.detectChanges();
       }
     }, 30);
@@ -236,5 +251,35 @@ export class LandingComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.clearTimersAndBackgroundNames();
+    if (this.slideshowInterval) {
+      clearInterval(this.slideshowInterval);
+    }
+  }
+
+  toggleNames() {
+    this.raffleService.toggleNamesVisibility();
+  }
+
+  startRaffle() {
+    if (this.raffleState !== 'running') {
+      this.raffleService.startRaffle();
+    }
+  }
+
+  resetRaffle() {
+    if (this.raffleState !== 'running') {
+      this.raffleService.resetRaffleStateAndWinner();
+    }
+  }
+
+  private startSlideshow(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.slideshowInterval = setInterval(() => {
+        this.ngZone.run(() => {
+          this.currentImage = this.currentImage % 8 + 1;
+          this.cdr.detectChanges();
+        });
+      }, 5000); // Change image every 5 seconds
+    });
   }
 }

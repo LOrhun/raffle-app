@@ -20,6 +20,7 @@
   overflow: hidden; /* To contain absolute positioned names */
   padding: 20px; /* Add some padding */
   box-sizing: border-box;
+  z-index: 1;
 }
 
 .landing-container::before {
@@ -84,7 +85,6 @@
   border-radius: 8px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   backdrop-filter: blur(3px); /* Frosted glass effect */
-  /* border: 1px solid rgba(255, 255, 255, 0.2); */ /* Border removed */
   font-family: "Playwrite DK Loopet", cursive;
   font-size: 1.2rem; /* Adjusted for handwritten font legibility */
   font-weight: normal; /* Lobster font has its own weight, often normal is best */
@@ -93,6 +93,16 @@
   white-space: nowrap;
   z-index: 1;
   pointer-events: none;
+}
+
+.background-name.hidden {
+  visibility: hidden;
+  transition: visibility 0s linear 1s, opacity 1s ease-in-out;
+}
+
+.background-name:not(.hidden) {
+  visibility: visible;
+  transition: visibility 0s linear 0s, opacity 1s ease-in-out;
 }
 
 .background-name:hover { /* Just for visual testing if needed, not user interactive */
@@ -378,3 +388,86 @@
 
 /* Ensure the base .background-name has z-index and position if these styles don't override */
 /* Default .background-name already has position:absolute, transition and z-index:1 which is good. */
+
+.control-buttons {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.control-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.control-btn:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.control-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-btn.active {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.right-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.control-btn i {
+  font-size: 16px;
+}
+
+.background-slideshow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  filter: blur(4px);
+}
+
+.background-image.active {
+  opacity: 1;
+}

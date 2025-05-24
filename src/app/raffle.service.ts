@@ -23,6 +23,7 @@ const LS_WINNER_KEY = 'raffle_winner';
 const LS_LANDING_TITLE_PREFIX_KEY = 'raffle_landing_title_prefix';
 const LS_LANDING_TITLE_SUFFIX_KEY = 'raffle_landing_title_suffix';
 const LS_NAME_STYLE_KEY = 'raffle_name_style';
+const LS_NAMES_VISIBLE_KEY = 'raffle_names_visible';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,9 @@ export class RaffleService implements OnDestroy {
 
   private nameStyleSubject: BehaviorSubject<NameStyle>;
   nameStyle$: Observable<NameStyle>;
+
+  private namesVisibleSubject: BehaviorSubject<boolean>;
+  namesVisible$: Observable<boolean>;
 
   private isBrowser: boolean;
 
@@ -70,6 +74,9 @@ export class RaffleService implements OnDestroy {
     this.nameStyleSubject = new BehaviorSubject<NameStyle>(this.loadFromLocalStorage(LS_NAME_STYLE_KEY, 'normal'));
     this.nameStyle$ = this.nameStyleSubject.asObservable();
 
+    this.namesVisibleSubject = new BehaviorSubject<boolean>(this.loadFromLocalStorage(LS_NAMES_VISIBLE_KEY, true));
+    this.namesVisible$ = this.namesVisibleSubject.asObservable();
+
     // Listen to storage events from other tabs
     if (this.isBrowser) {
       window.addEventListener('storage', this.handleStorageChange.bind(this));
@@ -91,8 +98,8 @@ export class RaffleService implements OnDestroy {
   }
 
   private handleStorageChange(event: StorageEvent): void {
-    if (!this.isBrowser) return; // Should not be called on server anyway, but as a safeguard
-    this.ngZone.run(() => { // Ensure updates run in Angular's zone
+    if (!this.isBrowser) return;
+    this.ngZone.run(() => {
       if (event.key === LS_PARTICIPANTS_KEY && event.newValue) {
         const newNames = JSON.parse(event.newValue);
         if (JSON.stringify(this.namesSubject.value) !== JSON.stringify(newNames)) {
@@ -122,6 +129,11 @@ export class RaffleService implements OnDestroy {
         const newStyle = JSON.parse(event.newValue) as NameStyle;
         if (this.nameStyleSubject.value !== newStyle) {
           this.nameStyleSubject.next(newStyle);
+        }
+      } else if (event.key === LS_NAMES_VISIBLE_KEY && event.newValue !== null) {
+        const newVisibility = JSON.parse(event.newValue);
+        if (this.namesVisibleSubject.value !== newVisibility) {
+          this.namesVisibleSubject.next(newVisibility);
         }
       }
     });
@@ -228,6 +240,17 @@ export class RaffleService implements OnDestroy {
   setNameStyle(style: NameStyle): void {
     this.nameStyleSubject.next(style);
     this.saveToLocalStorage(LS_NAME_STYLE_KEY, style);
+  }
+
+  toggleNamesVisibility(): void {
+    const currentVisibility = this.namesVisibleSubject.value;
+    this.namesVisibleSubject.next(!currentVisibility);
+    this.saveToLocalStorage(LS_NAMES_VISIBLE_KEY, !currentVisibility);
+  }
+
+  setNamesVisibility(visible: boolean): void {
+    this.namesVisibleSubject.next(visible);
+    this.saveToLocalStorage(LS_NAMES_VISIBLE_KEY, visible);
   }
 
   ngOnDestroy(): void {
